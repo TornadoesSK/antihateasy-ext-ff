@@ -1,0 +1,20 @@
+.app {
+    min-width: 300px;
+    text-align: center;
+}
+
+.app-switch {
+    max-width: 100px;
+}
+
+.app-switch:hover {
+    cursor: pointer;
+    opacity: .6;
+}
+
+
+.turn-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
