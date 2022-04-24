@@ -16,8 +16,11 @@
       },
 
       "permissions": [
-        "*://f8f5f711-c576-4195-ae8e-1f1daece11c1.mock.pstmn.io/*",
-        "activeTab"
+        "activeTab",
+        "webRequest", 
+        "webRequestBlocking", 
+        "webNavigation",
+        "<all_urls>"
       ]
   }
   

@@ -32,21 +32,24 @@ function blurElement(elem) {
 
 // determine if elem is hate speech
 function isHateSpeech(elem) {
-  data = elem.querySelector("div[lang]")
-
-  bodyData = {"message": data.textContent}
-
-  fetch("https://f8f5f711-c576-4195-ae8e-1f1daece11c1.mock.pstmn.io/api/message/hate", {
+  data = elem.querySelector("div[lang]");
+  console.log("TOTO SU DATA");
+  console.log(data);
+  bodyData = { message: data.textContent };
+  console.log("IS HATE? " + data.textContent);
+  console.log(JSON.stringify(bodyData));
+  fetch("https://antihate.free.beeceptor.com/api/message/hate", {
     method: "POST",
-    headers: {'Content-Type': 'application/json'}, 
-    body: JSON.stringify(bodyData)
-  }).then(res => {
-    console.log(JSON.stringify(res.json()))
-    console.log("Request complete! response: ", res);
-  }).catch(err => {
-    console.log("ERRRPR")
-    console.log(err);
-  });
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(bodyData),
+  })
+    .then((res) => {
+      console.log("Request complete! response:", res);
+    })
+    .catch((err) => {
+      console.log("ERRRPR");
+      console.log(err);
+    });
 
   if (counter % 3 == 0) {
     return true;
@@ -59,6 +62,7 @@ function main() {
   if (!isOn) {
     return;
   }
+  console.log("INNNNNN");
   /**
    * Check and set a global guard variable.
    * If this content script is injected into the same page again,
@@ -69,23 +73,28 @@ function main() {
   // }
   // window.hasRun = true;
 
-  var articles = document.querySelectorAll("article[data-testid=\"tweet\"]")
+  var articles = document.querySelectorAll('article[data-testid="tweet"]');
   for (const elem of articles) {
     // blur if is hate speech
     if (isHateSpeech(elem)) {
-        blurElement(elem)
+      blurElement(elem);
     }
-    counter += 1
-  } 
+    counter += 1;
+  }
 }
 
-(function() {
-  main()
+(function () {
+  main();
+
+  fetch("http://127.0.0.1:5000/api/message/hate", {
+    method: "POST",
+    body: JSON.stringify({ text: "tes" }),
+  }).then((data) => console.log(data));
 
   browser.runtime.onMessage.addListener((message) => {
     if (message.command === "AntiHateTurnedOff") {
       isOn = false;
-      blurs = document.getElementsByClassName("antihate-blur")
+      blurs = document.getElementsByClassName("antihate-blur");
       // remove text over blur
       while (blurs.length > 0) {
         blurs[0].parentNode.removeChild(blurs[0]);
@@ -93,13 +102,13 @@ function main() {
       // remove blur
       const blurredElems = document.getElementsByClassName("antihate-blurred");
       while (blurredElems.length > 0) {
-        const blurred = blurredElems[0]
-        blurred.style.filter = null
-        blurred.classList.remove("antihate-blurred")
+        const blurred = blurredElems[0];
+        blurred.style.filter = null;
+        blurred.classList.remove("antihate-blurred");
       }
     } else if (message.command === "AntiHateTurnedOn") {
       isOn = true;
       main();
     }
   });
-})()
+})();
