@@ -1,6 +1,12 @@
 var isOn = false;
 var counter = 0;
 
+function updateNumberOfBlocked() {
+  browser.runtime.sendMessage({
+    type: "AntiHateIsHate",
+  });
+}
+
 function blurElement(elem) {
   // setting article style
   elem.classList.add("antihate-blurred");
@@ -45,22 +51,16 @@ async function main() {
   if (!isOn) {
     return;
   }
-  console.log("INNNNNN");
-  /**
-   * Check and set a global guard variable.
-   * If this content script is injected into the same page again,
-   * it will do nothing next time.
-   */
-  // if (window.hasRun) {
-  //   return;
-  // }
-  // window.hasRun = true;
+  if (window.hasRun) {
+    return;
+  }
+  window.hasRun = true;
 
   var articles = document.querySelectorAll('article[data-testid="tweet"]');
   for (const elem of articles) {
     // blur if is hate speech
     if (await isHateSpeech(elem)) {
-      console.log("WE BAD")
+      updateNumberOfBlocked()
       blurElement(elem);
     }
     counter += 1;
