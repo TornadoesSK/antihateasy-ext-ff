@@ -2,23 +2,32 @@
 
 <html>
   <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="main.css"/>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
-<body>
-  <div class="app">
-    <div class="turn-image">
-      <img id="" class="app-switch turned-off" src="../images/turn-on.png"/>
-      <img id="" class="app-switch turned-on" src="../images/turn-off.png" style="display: none"/>
+  <body>
+    <div class="app">
+      <div class="turn-image">
+        <img id="" class="app-switch turned-off" src="../icons/power-off.svg" />
+        <img
+          id=""
+          class="app-switch turned-on"
+          src="../icons/power-on.svg"
+          style="display: none"
+        />
+      </div>
+      <h2>Antihateasy</h2>
+      <h2 id="number-of-blocked">0</h2>
+      <p>Blocked hateful messages</p>
+      <p>out of <span id="number-of-all">0</span></p>
     </div>
-    <h2>!HatEasy</h2>
-    <p>You are being protected. Do not resist!</p>
-    <h2 id="number-of-blocked">0</h2>
-    <p>Blocked hateful messages</p>
-
-  </div>
-  <script src="main.js"></script>
-</body>
-
+    <script src="main.js"></script>
+  </body>
 </html>

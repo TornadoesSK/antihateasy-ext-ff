@@ -1,26 +1,27 @@
 {
-    "manifest_version": 2,
-    "name": "!hateEasy",
-    "version": "1",
-  
-    "description": "Makes your life 4.5* times better. *Not guaranteed",
-  
-    "icons": {
-      "48": "icons/border-48.png"
-    },
+  "manifest_version": 2,
+  "name": "Antihateasy",
+  "version": "1",
 
-    "browser_action": {
-        "default_icon": "icons/border-48.png",
-        "default_title": "!hateEasy",
-        "default_popup": "popup/main.html"
-      },
+  "description": "Content filter for hate speech",
 
-      "permissions": [
-        "activeTab",
-        "webRequest", 
-        "webRequestBlocking", 
-        "webNavigation",
-        "<all_urls>"
-      ]
-  }
-  
+  "icons": {
+    "48": "icons/protect.svg",
+    "96": "icons/protect.svg"
+  },
+
+  "browser_action": {
+    "default_icon": "icons/protect.svg",
+    "default_title": "Antihateasy",
+    "default_popup": "popup/main.html"
+  },
+
+  "permissions": [
+    "activeTab",
+    "webRequest",
+    "webRequestBlocking",
+    "webNavigation",
+    "storage",
+    "<all_urls>"
+  ]
+}

@@ -1,3 +1,7 @@
+html {
+    font-family: "Open Sans", 'Courier New', Courier, monospace;
+}
+
 .app {
     min-width: 300px;
     text-align: center;
@@ -5,11 +9,13 @@
 
 .app-switch {
     max-width: 100px;
+    width: 96px;
+    height: 96px;
 }
 
 .app-switch:hover {
     cursor: pointer;
-    opacity: .6;
+    opacity: .8;
 }
 
 

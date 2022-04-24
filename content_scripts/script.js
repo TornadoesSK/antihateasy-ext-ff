@@ -1,9 +1,11 @@
 var isOn = false;
 var counter = 0;
 
-function updateNumberOfBlocked() {
+function updateNumberOfBlocked(all, hateful) {
   browser.runtime.sendMessage({
     type: "AntiHateIsHate",
+    all,
+    hateful,
   });
 }
 
@@ -40,7 +42,7 @@ function blurElement(elem) {
 async function isHateSpeech(elem) {
   data = elem.querySelector("div[lang]");
 
-  if (await fetchHate(data.textContent)) {
+  if (data && (await fetchHate(data.textContent))) {
     return true;
   } else {
     return false;
@@ -57,14 +59,16 @@ async function main() {
   window.hasRun = true;
 
   var articles = document.querySelectorAll('article[data-testid="tweet"]');
+  let hateful = 0;
   for (const elem of articles) {
     // blur if is hate speech
     if (await isHateSpeech(elem)) {
-      updateNumberOfBlocked()
       blurElement(elem);
+      hateful++;
     }
     counter += 1;
   }
+  updateNumberOfBlocked(articles.length, hateful);
 }
 
 async function fetchHate(message) {
@@ -73,37 +77,39 @@ async function fetchHate(message) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text: message }),
   })
-.then(response => response.body)
-.then(rb => {
-  const reader = rb.getReader();
+    .then((response) => response.body)
+    .then((rb) => {
+      const reader = rb.getReader();
 
-  return new ReadableStream({
-    start(controller) {
-      // The following function handles each data chunk
-      function push() {
-        // "done" is a Boolean and value a "Uint8Array"
-        reader.read().then( ({done, value}) => {
-          // If there is no more data to read
-          if (done) {
-            controller.close();
-            return;
+      return new ReadableStream({
+        start(controller) {
+          // The following function handles each data chunk
+          function push() {
+            // "done" is a Boolean and value a "Uint8Array"
+            reader.read().then(({ done, value }) => {
+              // If there is no more data to read
+              if (done) {
+                controller.close();
+                return;
+              }
+              // Get the data and send it to the browser via the controller
+              controller.enqueue(value);
+              push();
+            });
           }
-          // Get the data and send it to the browser via the controller
-          controller.enqueue(value);
+
           push();
-        })
-      }
+        },
+      });
+    })
+    .then((stream) => {
+      // Respond with our stream
+      return new Response(stream, {
+        headers: { "Content-Type": "text/html" },
+      }).text();
+    });
 
-      push();
-    }
-  });
-})
-.then(stream => {
-  // Respond with our stream
-  return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
-});
-
-return JSON.parse(data).hate
+  return JSON.parse(data).hate;
 }
 
 (function () {
