@@ -38,7 +38,7 @@ function isHateSpeech(elem) {
   bodyData = { message: data.textContent };
   console.log("IS HATE? " + data.textContent);
   console.log(JSON.stringify(bodyData));
-  fetch("https://antihate.free.beeceptor.com/api/message/hate", {
+  fetch("https://127.0.0.1:5000/api/message/hate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(bodyData),
@@ -88,6 +88,7 @@ function main() {
 
   fetch("http://127.0.0.1:5000/api/message/hate", {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text: "tes" }),
   }).then((data) => console.log(data));
 
