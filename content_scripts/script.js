@@ -25,13 +25,13 @@ function blurElement(elem) {
   newElem.style.zIndex = "100";
   // setting inside element
   var inside = document.createElement("p");
-  inside.innerText = "Hateful speech blocked!";
+  inside.innerText = "This content may be hateful";
   inside.style.backgroundColor = "black";
   inside.style.border = "2px solid black";
   inside.style.borderRadius = "10px";
-  inside.style.fontSize = "1.2em";
-  inside.style.opacity = "0.6";
-  inside.style.padding = "5px";
+  inside.style.fontSize = "16px";
+  inside.style.opacity = "0.75";
+  inside.style.padding = "5px 15px";
   inside.style.color = "white";
   newElem.appendChild(inside);
   // append before article
