@@ -31,34 +31,17 @@ function blurElement(elem) {
 }
 
 // determine if elem is hate speech
-function isHateSpeech(elem) {
+async function isHateSpeech(elem) {
   data = elem.querySelector("div[lang]");
-  console.log("TOTO SU DATA");
-  console.log(data);
-  bodyData = { message: data.textContent };
-  console.log("IS HATE? " + data.textContent);
-  console.log(JSON.stringify(bodyData));
-  fetch("https://127.0.0.1:5000/api/message/hate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(bodyData),
-  })
-    .then((res) => {
-      console.log("Request complete! response:", res);
-    })
-    .catch((err) => {
-      console.log("ERRRPR");
-      console.log(err);
-    });
 
-  if (counter % 3 == 0) {
+  if (await fetchHate(data.textContent)) {
     return true;
   } else {
     return false;
   }
 }
 
-function main() {
+async function main() {
   if (!isOn) {
     return;
   }
@@ -76,21 +59,55 @@ function main() {
   var articles = document.querySelectorAll('article[data-testid="tweet"]');
   for (const elem of articles) {
     // blur if is hate speech
-    if (isHateSpeech(elem)) {
+    if (await isHateSpeech(elem)) {
+      console.log("WE BAD")
       blurElement(elem);
     }
     counter += 1;
   }
 }
 
-(function () {
-  main();
-
-  fetch("http://127.0.0.1:5000/api/message/hate", {
+async function fetchHate(message) {
+  const data = await fetch("http://127.0.0.1:5000/api/message/hate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text: "tes" }),
-  }).then((data) => console.log(data));
+    body: JSON.stringify({ text: message }),
+  })
+.then(response => response.body)
+.then(rb => {
+  const reader = rb.getReader();
+
+  return new ReadableStream({
+    start(controller) {
+      // The following function handles each data chunk
+      function push() {
+        // "done" is a Boolean and value a "Uint8Array"
+        reader.read().then( ({done, value}) => {
+          // If there is no more data to read
+          if (done) {
+            controller.close();
+            return;
+          }
+          // Get the data and send it to the browser via the controller
+          controller.enqueue(value);
+          push();
+        })
+      }
+
+      push();
+    }
+  });
+})
+.then(stream => {
+  // Respond with our stream
+  return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
+});
+
+return JSON.parse(data).hate
+}
+
+(function () {
+  main();
 
   browser.runtime.onMessage.addListener((message) => {
     if (message.command === "AntiHateTurnedOff") {

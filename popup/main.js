@@ -44,4 +44,18 @@ function getCounter() {
 
 setCounter(2)
 
+browser.runtime.onMessage.addListener((message) => {
+      if (message.type == "AntiHateIsHate") {
+        var url = "http://127.0.0.1:5000/api/message/hate";
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({"text": message.text})
+        })
+            .then(response => console.log(response.text()));
+        return true;  // Will respond asynchronously.
+      }
+    });
+  
+
 // executeScript({file: "/content_scripts/script.js"}).then(listenForClicks)
