@@ -53,10 +53,10 @@ async function main() {
   if (!isOn) {
     return;
   }
-  if (window.hasRun) {
-    return;
-  }
-  window.hasRun = true;
+  // if (window.hasRun) {
+  //   return;
+  // }
+  // window.hasRun = true;
 
   var articles = document.querySelectorAll('article[data-testid="tweet"]');
   let hateful = 0;

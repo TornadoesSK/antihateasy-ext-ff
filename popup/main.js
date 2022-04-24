@@ -15,7 +15,6 @@ function listenForClicks() {
     if (e.target.classList.contains("turned-on")) {
       var on = document.getElementsByClassName("turned-off")[0];
       on.style.display = "block";
-      setCounter(0);
       var off = document.getElementsByClassName("turned-on")[0];
       off.style.display = "none";
       browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
