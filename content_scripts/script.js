@@ -33,17 +33,16 @@ function blurElement(elem) {
 // determine if elem is hate speech
 function isHateSpeech(elem) {
   data = elem.querySelector("div[lang]")
-  console.log("TOTO SU DATA")
-  console.log(data)
+
   bodyData = {"message": data.textContent}
-  console.log("IS HATE? " + data.textContent)
-  console.log(JSON.stringify(bodyData))
-  fetch("https://antihate.free.beeceptor.com/api/message/hate", {
+
+  fetch("https://f8f5f711-c576-4195-ae8e-1f1daece11c1.mock.pstmn.io/api/message/hate", {
     method: "POST",
     headers: {'Content-Type': 'application/json'}, 
     body: JSON.stringify(bodyData)
   }).then(res => {
-    console.log("Request complete! response:", res);
+    console.log(JSON.stringify(res.json()))
+    console.log("Request complete! response: ", res);
   }).catch(err => {
     console.log("ERRRPR")
     console.log(err);
@@ -60,7 +59,6 @@ function main() {
   if (!isOn) {
     return;
   }
-  console.log("INNNNNN")
   /**
    * Check and set a global guard variable.
    * If this content script is injected into the same page again,
